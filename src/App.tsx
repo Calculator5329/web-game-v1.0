@@ -1,6 +1,8 @@
 import { observer } from 'mobx-react-lite';
 import { StoreContext, gameStore } from './stores/RootStore';
 import { GameScreen } from './core/types';
+import { SpaceBackground } from './ui/components/SpaceBackground';
+import { WarpEffect } from './ui/components/WarpEffect';
 import { HUD } from './ui/components/HUD';
 import { Notifications } from './ui/components/Notifications';
 import { MainMenu } from './ui/screens/MainMenu';
@@ -45,9 +47,11 @@ function App() {
   return (
     <StoreContext.Provider value={store}>
       <div style={{ width: '100%', height: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-deep)', overflow: 'hidden' }}>
+        <SpaceBackground intensity={store.screen === GameScreen.MainMenu ? 1.2 : 0.6} />
+        <WarpEffect active={store.warping} />
         {showHUD && <HUD />}
         <Notifications />
-        <div style={{ flex: 1, overflow: 'hidden' }}>
+        <div style={{ flex: 1, overflow: 'hidden', position: 'relative', zIndex: 1 }}>
           <ScreenRouter />
         </div>
       </div>

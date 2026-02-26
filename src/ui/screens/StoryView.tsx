@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores/RootStore';
 import { GameScreen } from '../../core/types';
-import { Panel } from '../components/Panel';
+import { HoloPanel } from '../components/HoloPanel';
 import { Button } from '../components/Button';
 
 function TypewriterText({ text, onComplete }: { text: string; onComplete?: () => void }) {
@@ -48,14 +48,14 @@ export const StoryView = observer(function StoryView() {
   if (eventOutcome) {
     return (
       <div style={containerStyle}>
-        <Panel title="Outcome" accent="var(--cyan)" style={{ maxWidth: '650px', width: '100%' }} glow>
+        <HoloPanel title="Outcome" accent="var(--cyan)" style={{ maxWidth: '650px', width: '100%' }} glow corners>
           <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: '16px' }}>
             {eventOutcome}
           </p>
           <Button onClick={() => store.dismissEventOutcome()} fullWidth>
             Continue
           </Button>
-        </Panel>
+        </HoloPanel>
       </div>
     );
   }
@@ -64,12 +64,12 @@ export const StoryView = observer(function StoryView() {
   if (event) {
     return (
       <div style={containerStyle}>
-        <Panel title={event.title} accent={
+        <HoloPanel title={event.title} accent={
           event.type === 'encounter' ? 'var(--red)' :
           event.type === 'discovery' ? 'var(--cyan)' :
           event.type === 'distress' ? 'var(--amber)' :
           event.type === 'anomaly' ? 'var(--purple)' : 'var(--cyan)'
-        } style={{ maxWidth: '650px', width: '100%' }} glow>
+        } style={{ maxWidth: '650px', width: '100%' }} glow corners scanline>
           <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginBottom: '12px', fontFamily: 'var(--font-display)', letterSpacing: '1px', textTransform: 'uppercase' }}>
             {event.type}
           </div>
@@ -83,7 +83,7 @@ export const StoryView = observer(function StoryView() {
               </Button>
             ))}
           </div>
-        </Panel>
+        </HoloPanel>
       </div>
     );
   }
@@ -99,13 +99,13 @@ export const StoryView = observer(function StoryView() {
               <div style={{ fontFamily: 'var(--font-display)', fontSize: '0.7rem', color: 'var(--text-dim)', letterSpacing: '3px' }}>
                 CHAPTER {storyStore.currentChapter}
               </div>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', color: 'var(--cyan)', letterSpacing: '2px' }}>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', color: 'var(--cyan)', letterSpacing: '2px', textShadow: '0 0 20px rgba(0,240,255,0.4)' }}>
                 {storyStore.currentChapterData?.title}
               </h2>
             </div>
           )}
 
-          <Panel accent="var(--cyan)" glow>
+          <HoloPanel accent="var(--cyan)" glow corners>
             {/* Speaker */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
               <div style={{
@@ -143,7 +143,7 @@ export const StoryView = observer(function StoryView() {
                 </Button>
               ))}
             </div>
-          </Panel>
+          </HoloPanel>
         </div>
       </div>
     );

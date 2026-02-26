@@ -1,56 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores/RootStore';
 import { ShipClass } from '../../core/types';
 import { Button } from '../components/Button';
-import { Panel } from '../components/Panel';
-
-function StarField() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const stars: { x: number; y: number; r: number; a: number; speed: number }[] = [];
-    for (let i = 0; i < 300; i++) {
-      stars.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        r: Math.random() * 1.5 + 0.3,
-        a: Math.random(),
-        speed: Math.random() * 0.02 + 0.005,
-      });
-    }
-
-    let frame: number;
-    function draw() {
-      ctx!.fillStyle = '#050a18';
-      ctx!.fillRect(0, 0, canvas!.width, canvas!.height);
-
-      stars.forEach(s => {
-        s.a += s.speed;
-        const alpha = 0.3 + Math.sin(s.a) * 0.5;
-        ctx!.beginPath();
-        ctx!.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-        ctx!.fillStyle = `rgba(200,220,255,${Math.max(0.1, alpha)})`;
-        ctx!.fill();
-      });
-
-      frame = requestAnimationFrame(draw);
-    }
-    draw();
-
-    return () => cancelAnimationFrame(frame);
-  }, []);
-
-  return <canvas ref={canvasRef} style={{ position: 'absolute', inset: 0 }} />;
-}
+import { HoloPanel } from '../components/HoloPanel';
 
 const SHIP_DESCRIPTIONS: Record<ShipClass, string> = {
   [ShipClass.Scout]: 'Fast and agile. Great fuel economy and speed, but limited cargo and firepower.',
@@ -74,8 +27,6 @@ export const MainMenu = observer(function MainMenu() {
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
-      <StarField />
-
       <div style={{
         position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center', height: '100%', gap: '24px',
@@ -119,7 +70,7 @@ export const MainMenu = observer(function MainMenu() {
             </p>
           </>
         ) : (
-          <Panel title="New Game" accent="var(--cyan)" style={{ width: '520px', animation: 'fade-in-up 0.4s ease' }}>
+          <HoloPanel title="New Game" accent="var(--cyan)" style={{ width: '520px', animation: 'fade-in-up 0.4s ease' }} corners scanline>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div>
                 <label style={{ fontFamily: 'var(--font-display)', fontSize: '0.7rem', color: 'var(--text-secondary)', letterSpacing: '1px', display: 'block', marginBottom: '6px' }}>
@@ -174,7 +125,7 @@ export const MainMenu = observer(function MainMenu() {
                 <Button onClick={handleNewGame} style={{ flex: 2 }}>Launch</Button>
               </div>
             </div>
-          </Panel>
+          </HoloPanel>
         )}
       </div>
     </div>

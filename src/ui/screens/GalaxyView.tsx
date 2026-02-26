@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores/RootStore';
-import { Panel } from '../components/Panel';
+import { HoloPanel } from '../components/HoloPanel';
 import { Button } from '../components/Button';
 import { FACTIONS } from '../../data/factions';
 import type { StarSystem } from '../../core/types';
@@ -90,8 +90,30 @@ export const GalaxyView = observer(function GalaxyView() {
         onMouseLeave={handleMouseUp}
         onWheel={handleWheel}
       >
-        <svg width="100%" height="100%" style={{ background: 'var(--bg-deep)' }}>
+        <svg width="100%" height="100%" style={{ background: 'transparent' }}>
+          <defs>
+            <filter id="nebula-blur">
+              <feGaussianBlur stdDeviation="30" />
+            </filter>
+            <filter id="star-glow">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+          </defs>
           <g transform={`translate(${offset.x},${offset.y}) scale(${zoom})`}>
+            {/* Faction territory nebulae */}
+            {galaxyStore.discoveredSystems.filter(s => s.faction).map(sys => {
+              const fColor = sys.faction ? FACTIONS[sys.faction].color : '#888';
+              return (
+                <ellipse key={`neb-${sys.id}`}
+                  cx={sys.coordinates.x} cy={sys.coordinates.y}
+                  rx={80} ry={60}
+                  fill={fColor} opacity={0.03}
+                  filter="url(#nebula-blur)"
+                />
+              );
+            })}
+
             {/* Connections */}
             {galaxyStore.discoveredSystems.map(sys =>
               sys.connections.map(connId => {
@@ -101,13 +123,27 @@ export const GalaxyView = observer(function GalaxyView() {
                 const isRoute = (sys.id === playerStore.player.currentSystem && connectedIds.includes(connId)) ||
                   (connId === playerStore.player.currentSystem && connectedIds.includes(sys.id));
                 return (
-                  <line key={`${sys.id}-${connId}`}
-                    x1={sys.coordinates.x} y1={sys.coordinates.y}
-                    x2={conn.coordinates.x} y2={conn.coordinates.y}
-                    stroke={isRoute ? 'rgba(0,240,255,0.3)' : 'rgba(100,120,150,0.15)'}
-                    strokeWidth={isRoute ? 1.5 : 0.8}
-                    strokeDasharray={isRoute ? 'none' : '4 4'}
-                  />
+                  <g key={`${sys.id}-${connId}`}>
+                    <line
+                      x1={sys.coordinates.x} y1={sys.coordinates.y}
+                      x2={conn.coordinates.x} y2={conn.coordinates.y}
+                      stroke={isRoute ? 'rgba(0,240,255,0.25)' : 'rgba(80,100,140,0.1)'}
+                      strokeWidth={isRoute ? 1.5 : 0.6}
+                      strokeDasharray={isRoute ? 'none' : '5 5'}
+                    />
+                    {isRoute && (
+                      <line
+                        x1={sys.coordinates.x} y1={sys.coordinates.y}
+                        x2={conn.coordinates.x} y2={conn.coordinates.y}
+                        stroke="rgba(0,240,255,0.6)"
+                        strokeWidth={0.5}
+                        strokeDasharray="3 12"
+                        strokeDashoffset="0"
+                      >
+                        <animate attributeName="stroke-dashoffset" from="0" to="-15" dur="1s" repeatCount="indefinite" />
+                      </line>
+                    )}
+                  </g>
                 );
               })
             )}
@@ -193,14 +229,14 @@ export const GalaxyView = observer(function GalaxyView() {
       <div style={{ width: '300px', padding: '10px', display: 'flex', flexDirection: 'column', gap: '10px', overflowY: 'auto', background: 'rgba(5,10,24,0.6)' }}>
         {/* Current system info */}
         {currentSystem && (
-          <Panel title="Current System" accent="var(--cyan)">
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', color: 'var(--cyan)', marginBottom: '6px' }}>
+          <HoloPanel title="Current System" accent="var(--cyan)" corners scanline>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', color: 'var(--cyan)', marginBottom: '6px', textShadow: '0 0 10px rgba(0,240,255,0.3)' }}>
               {currentSystem.name}
             </h3>
-            <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '8px' }}>
+            <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '8px' }}>
               {currentSystem.description}
             </p>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px', fontSize: '0.75rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px', fontSize: '0.72rem' }}>
               <span style={{ color: 'var(--text-dim)' }}>Star:</span>
               <span style={{ color: STAR_COLORS[currentSystem.starType] }}>{currentSystem.starType.replace(/_/g, ' ')}</span>
               <span style={{ color: 'var(--text-dim)' }}>Faction:</span>
@@ -214,21 +250,21 @@ export const GalaxyView = observer(function GalaxyView() {
               <span style={{ color: 'var(--text-dim)' }}>Tech:</span>
               <span style={{ color: 'var(--blue)' }}>Level {currentSystem.techLevel}</span>
             </div>
-          </Panel>
+          </HoloPanel>
         )}
 
         {/* Hovered system */}
         {selected && selected.id !== playerStore.player.currentSystem && (
-          <Panel title={canTravel(selected) ? 'Travel Available' : 'Out of Range'} accent={canTravel(selected) ? 'var(--green)' : 'var(--text-dim)'}>
+          <HoloPanel title={canTravel(selected) ? 'Travel Available' : 'Out of Range'} accent={canTravel(selected) ? 'var(--green)' : 'var(--text-dim)'} glow={canTravel(selected)} corners>
             <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '0.9rem', color: 'var(--text-primary)', marginBottom: '4px' }}>
               {selected.name}
             </h3>
-            <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', lineHeight: 1.4, marginBottom: '8px' }}>
+            <p style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', lineHeight: 1.4, marginBottom: '8px' }}>
               {selected.description}
             </p>
             {canTravel(selected) && (
               <>
-                <div style={{ fontSize: '0.75rem', color: 'var(--amber)', marginBottom: '8px' }}>
+                <div style={{ fontSize: '0.72rem', color: 'var(--amber)', marginBottom: '8px' }}>
                   Fuel cost: {fuelCost(selected)} | Danger: {selected.dangerLevel}/10
                 </div>
                 <Button
@@ -241,11 +277,11 @@ export const GalaxyView = observer(function GalaxyView() {
                 </Button>
               </>
             )}
-          </Panel>
+          </HoloPanel>
         )}
 
         {/* Active quests */}
-        <Panel title="Active Quests" accent="var(--purple)">
+        <HoloPanel title="Active Quests" accent="var(--purple)" corners>
           {store.storyStore.activeQuests.length === 0 ? (
             <p style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>No active quests</p>
           ) : (
@@ -262,7 +298,7 @@ export const GalaxyView = observer(function GalaxyView() {
               </div>
             ))
           )}
-        </Panel>
+        </HoloPanel>
       </div>
     </div>
   );

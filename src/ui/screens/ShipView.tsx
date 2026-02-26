@@ -1,7 +1,9 @@
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores/RootStore';
-import { Panel } from '../components/Panel';
+import { HoloPanel } from '../components/HoloPanel';
 import { Button } from '../components/Button';
+import { ShipRenderer } from '../components/ShipRenderer';
+import { getShipType } from '../components/shipUtils';
 import { SHIP_UPGRADES } from '../../data/ships';
 import { FACTIONS, getReputationTier, getReputationColor } from '../../data/factions';
 import { FactionId } from '../../core/types';
@@ -34,8 +36,8 @@ export const ShipView = observer(function ShipView() {
     <div style={{ height: '100%', padding: '20px', overflowY: 'auto', display: 'flex', gap: '16px' }}>
       {/* Ship info */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <Panel title="Ship Status" accent="var(--cyan)" glow>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+        <HoloPanel title="Ship Status" accent="var(--cyan)" glow corners scanline>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
             <div>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', color: 'var(--cyan)', letterSpacing: '2px' }}>
                 {ship.name}
@@ -52,6 +54,7 @@ export const ShipView = observer(function ShipView() {
                 Cargo: <span style={{ color: 'var(--amber)' }}>{playerStore.currentCargoUsed}/{ship.cargoCapacity}</span>
               </div>
             </div>
+            <ShipRenderer type={getShipType(ship.name, true)} size={70} shieldActive={ship.shields > 0} />
           </div>
 
           <StatBar label="Hull" value={ship.hull} max={ship.maxHull} color="var(--green)" />
@@ -69,10 +72,10 @@ export const ShipView = observer(function ShipView() {
               Repair
             </Button>
           </div>
-        </Panel>
+          </HoloPanel>
 
         {/* Weapons */}
-        <Panel title="Weapons" accent="var(--red)">
+        <HoloPanel title="Weapons" accent="var(--red)" corners>
           {ship.weapons.map((w, i) => (
             <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border)' }}>
               <div>
@@ -86,11 +89,11 @@ export const ShipView = observer(function ShipView() {
               </div>
             </div>
           ))}
-        </Panel>
+          </HoloPanel>
 
         {/* Installed Upgrades */}
         {ship.upgrades.length > 0 && (
-          <Panel title="Installed Upgrades" accent="var(--blue)">
+          <HoloPanel title="Installed Upgrades" accent="var(--blue)" corners>
             {ship.upgrades.map(uid => {
               const up = SHIP_UPGRADES.find(u => u.id === uid);
               if (!up) return null;
@@ -100,14 +103,14 @@ export const ShipView = observer(function ShipView() {
                 </div>
               );
             })}
-          </Panel>
+          </HoloPanel>
         )}
       </div>
 
       {/* Right column */}
       <div style={{ width: '340px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {/* Player stats */}
-        <Panel title="Captain Profile" accent="var(--purple)">
+        <HoloPanel title="Captain Profile" accent="var(--purple)" corners>
           <div style={{ fontSize: '0.85rem', marginBottom: '8px' }}>
             <span style={{ fontFamily: 'var(--font-display)', color: 'var(--purple)', letterSpacing: '1px' }}>{player.name}</span>
             <span style={{ color: 'var(--text-dim)', marginLeft: '8px' }}>Level {player.level}</span>
@@ -122,10 +125,10 @@ export const ShipView = observer(function ShipView() {
             <span style={{ color: 'var(--text-dim)' }}>Quests done:</span><span>{player.stats.questsCompleted}</span>
             <span style={{ color: 'var(--text-dim)' }}>Credits earned:</span><span style={{ color: 'var(--gold)' }}>{player.stats.creditsEarned.toLocaleString()}</span>
           </div>
-        </Panel>
+        </HoloPanel>
 
         {/* Faction reputation */}
-        <Panel title="Faction Standing" accent="var(--amber)">
+        <HoloPanel title="Faction Standing" accent="var(--amber)" corners>
           {Object.values(FactionId).map(fid => {
             const rep = player.reputation[fid];
             const faction = FACTIONS[fid];
@@ -148,11 +151,11 @@ export const ShipView = observer(function ShipView() {
               </div>
             );
           })}
-        </Panel>
+        </HoloPanel>
 
         {/* Available upgrades */}
         {system?.hasShipyard && availableUpgrades.length > 0 && (
-          <Panel title="Shipyard — Upgrades" accent="var(--green)">
+          <HoloPanel title="Shipyard — Upgrades" accent="var(--green)" corners>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               {availableUpgrades.slice(0, 6).map(up => (
                 <div key={up.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px', background: 'rgba(0,0,0,0.2)', borderRadius: 'var(--radius)' }}>
@@ -171,7 +174,7 @@ export const ShipView = observer(function ShipView() {
                 </div>
               ))}
             </div>
-          </Panel>
+          </HoloPanel>
         )}
       </div>
     </div>

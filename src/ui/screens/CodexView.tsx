@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores/RootStore';
-import { Panel } from '../components/Panel';
+import { HoloPanel } from '../components/HoloPanel';
 import { CODEX_ENTRIES } from '../../data/codex';
 import type { Quest } from '../../core/types';
 import { QuestStatus } from '../../core/types';
@@ -107,7 +107,7 @@ export const CodexView = observer(function CodexView() {
               const entries = CODEX_ENTRIES.filter(e => e.category === cat);
               if (entries.length === 0) return null;
               return (
-                <Panel key={cat} title={cat} accent="var(--purple)">
+                <HoloPanel key={cat} title={cat} accent="var(--purple)" corners>
                   {entries.map(entry => (
                     <div key={entry.id} style={{ padding: '8px 0', borderBottom: '1px solid var(--border)' }}>
                       <div style={{ fontFamily: 'var(--font-display)', fontSize: '0.8rem', color: entry.discovered || store.playerStore.player.visitedSystems.length > 3 ? 'var(--text-primary)' : 'var(--text-dim)', letterSpacing: '0.5px' }}>
@@ -120,14 +120,14 @@ export const CodexView = observer(function CodexView() {
                       </p>
                     </div>
                   ))}
-                </Panel>
+                </HoloPanel>
               );
             })}
           </div>
         )}
 
         {tab === 'history' && (
-          <Panel title="Trade History" accent="var(--gold)">
+          <HoloPanel title="Trade History" accent="var(--gold)" corners scanline>
             {tradeHistory.length === 0 ? (
               <p style={{ color: 'var(--text-dim)', fontSize: '0.85rem' }}>No trades recorded yet.</p>
             ) : (
@@ -144,7 +144,7 @@ export const CodexView = observer(function CodexView() {
                 ))}
               </div>
             )}
-          </Panel>
+          </HoloPanel>
         )}
       </div>
     </div>

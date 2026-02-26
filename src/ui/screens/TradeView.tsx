@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores/RootStore';
-import { Panel } from '../components/Panel';
+import { HoloPanel } from '../components/HoloPanel';
 import { Button } from '../components/Button';
 import { getCommodityById } from '../../data/commodities';
 import { calculateBuyPrice, calculateSellPrice, canBuy, executeBuy, executeSell, createTradeRecord } from '../../services/EconomyService';
@@ -53,7 +53,7 @@ export const TradeView = observer(function TradeView() {
     <div style={{ height: '100%', padding: '20px', display: 'flex', gap: '16px', overflow: 'hidden' }}>
       {/* Market listings */}
       <div style={{ flex: 1, overflowY: 'auto' }}>
-        <Panel title="Market" accent="var(--gold)">
+        <HoloPanel title="Market" accent="var(--gold)" corners scanline>
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 0.7fr 0.7fr 0.5fr', gap: '0', fontSize: '0.7rem' }}>
             <div style={headerStyle}>COMMODITY</div>
             <div style={headerStyle}>PRICE</div>
@@ -86,12 +86,12 @@ export const TradeView = observer(function TradeView() {
               ];
             })}
           </div>
-        </Panel>
+        </HoloPanel>
       </div>
 
       {/* Trade panel */}
       <div style={{ width: '320px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <Panel title="Your Cargo" accent="var(--cyan)">
+        <HoloPanel title="Your Cargo" accent="var(--cyan)" corners>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', marginBottom: '8px' }}>
             <span style={{ color: 'var(--text-dim)' }}>Capacity: </span>
             <span style={{ color: playerStore.currentCargoUsed >= playerStore.player.ship.cargoCapacity ? 'var(--red)' : 'var(--green)' }}>
@@ -113,10 +113,10 @@ export const TradeView = observer(function TradeView() {
               );
             })
           )}
-        </Panel>
+          </HoloPanel>
 
         {selected && commodity && (
-          <Panel title="Trade" accent="var(--green)" glow>
+          <HoloPanel title="Trade" accent="var(--green)" glow corners>
             <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '4px' }}>
               {commodity.name}
             </h3>
@@ -164,7 +164,7 @@ export const TradeView = observer(function TradeView() {
                 Sell {quantity}
               </Button>
             </div>
-          </Panel>
+          </HoloPanel>
         )}
       </div>
     </div>

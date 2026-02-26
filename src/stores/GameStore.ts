@@ -16,6 +16,7 @@ export class GameStore {
   hasSaveGame: boolean = false;
   isLoading: boolean = false;
   eventOutcome: string | null = null;
+  warping: boolean = false;
 
   playerStore: PlayerStore;
   galaxyStore: GalaxyStore;
@@ -129,31 +130,39 @@ export class GameStore {
     this.playerStore.updateShip({ fuel: this.playerStore.player.ship.fuel - fuelCost });
     const dist = getDistance(from.coordinates, to.coordinates);
     this.playerStore.addDistance(dist);
-    this.playerStore.setCurrentSystem(systemId);
-    this.galaxyStore.discoverConnectedSystems(systemId);
-    this.gameTick++;
-    this.galaxyStore.tickMarkets(this.gameTick);
 
-    this.storyStore.onSystemVisited(systemId);
+    this.warping = true;
+    const targetId = systemId;
+    const targetDanger = to.dangerLevel;
+    const targetName = to.name;
 
-    const event = this.storyStore.tryRandomEvent(to.dangerLevel);
-    if (event) {
-      this.eventOutcome = null;
-      this.screen = GameScreen.Story;
-      this.notify(`Event: ${event.title}`, 'info');
-      return;
-    }
+    setTimeout(() => runInAction(() => {
+      this.warping = false;
+      this.playerStore.setCurrentSystem(targetId);
+      this.galaxyStore.discoverConnectedSystems(targetId);
+      this.gameTick++;
+      this.galaxyStore.tickMarkets(this.gameTick);
+      this.storyStore.onSystemVisited(targetId);
 
-    if (shouldEncounterEnemy(to.dangerLevel)) {
-      const enemy = generateEnemy(to.dangerLevel);
-      this.combatStore.startCombat(enemy);
-      this.screen = GameScreen.Combat;
-      this.notify(`Hostile contact: ${enemy.name}!`, 'danger');
-      return;
-    }
+      const event = this.storyStore.tryRandomEvent(targetDanger);
+      if (event) {
+        this.eventOutcome = null;
+        this.screen = GameScreen.Story;
+        this.notify(`Event: ${event.title}`, 'info');
+        return;
+      }
 
-    this.notify(`Arrived at ${to.name}. Fuel -${fuelCost}.`, 'info');
-    this.saveCurrentGame();
+      if (shouldEncounterEnemy(targetDanger)) {
+        const enemy = generateEnemy(targetDanger);
+        this.combatStore.startCombat(enemy);
+        this.screen = GameScreen.Combat;
+        this.notify(`Hostile contact: ${enemy.name}!`, 'danger');
+        return;
+      }
+
+      this.notify(`Arrived at ${targetName}. Fuel -${fuelCost}.`, 'info');
+      this.saveCurrentGame();
+    }), 1300);
   }
 
   resolveEventChoice(choiceIndex: number) {
