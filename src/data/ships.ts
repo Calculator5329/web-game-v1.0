@@ -1,0 +1,143 @@
+import { type Ship, type ShipUpgrade, type ShipWeapon, ShipClass } from '../core/types';
+
+export const STARTER_WEAPONS: Record<string, ShipWeapon> = {
+  pulse_laser: {
+    name: 'Pulse Laser',
+    damage: 15,
+    energyCost: 10,
+    accuracy: 0.85,
+    type: 'energy',
+  },
+  railgun: {
+    name: 'Railgun',
+    damage: 25,
+    energyCost: 20,
+    accuracy: 0.7,
+    type: 'kinetic',
+  },
+  missile_pod: {
+    name: 'Missile Pod',
+    damage: 35,
+    energyCost: 25,
+    accuracy: 0.6,
+    type: 'missile',
+  },
+  plasma_cannon: {
+    name: 'Plasma Cannon',
+    damage: 40,
+    energyCost: 30,
+    accuracy: 0.65,
+    type: 'energy',
+  },
+  gatling_turret: {
+    name: 'Gatling Turret',
+    damage: 10,
+    energyCost: 5,
+    accuracy: 0.9,
+    type: 'kinetic',
+  },
+  torpedo_launcher: {
+    name: 'Torpedo Launcher',
+    damage: 50,
+    energyCost: 35,
+    accuracy: 0.55,
+    type: 'missile',
+  },
+};
+
+export const STARTER_SHIPS: Record<ShipClass, Ship> = {
+  [ShipClass.Scout]: {
+    name: 'Horizon',
+    class: ShipClass.Scout,
+    hull: 80, maxHull: 80,
+    shields: 40, maxShields: 40,
+    energy: 60, maxEnergy: 60,
+    fuel: 100, maxFuel: 100,
+    cargoCapacity: 20,
+    weapons: [STARTER_WEAPONS.pulse_laser],
+    upgrades: [],
+    speed: 8,
+  },
+  [ShipClass.Trader]: {
+    name: 'Merchant\'s Fortune',
+    class: ShipClass.Trader,
+    hull: 100, maxHull: 100,
+    shields: 30, maxShields: 30,
+    energy: 50, maxEnergy: 50,
+    fuel: 120, maxFuel: 120,
+    cargoCapacity: 50,
+    weapons: [STARTER_WEAPONS.gatling_turret],
+    upgrades: [],
+    speed: 5,
+  },
+  [ShipClass.Fighter]: {
+    name: 'Starblade',
+    class: ShipClass.Fighter,
+    hull: 70, maxHull: 70,
+    shields: 60, maxShields: 60,
+    energy: 80, maxEnergy: 80,
+    fuel: 80, maxFuel: 80,
+    cargoCapacity: 10,
+    weapons: [STARTER_WEAPONS.pulse_laser, STARTER_WEAPONS.missile_pod],
+    upgrades: [],
+    speed: 10,
+  },
+  [ShipClass.Explorer]: {
+    name: 'Pathfinder',
+    class: ShipClass.Explorer,
+    hull: 90, maxHull: 90,
+    shields: 50, maxShields: 50,
+    energy: 70, maxEnergy: 70,
+    fuel: 150, maxFuel: 150,
+    cargoCapacity: 30,
+    weapons: [STARTER_WEAPONS.pulse_laser],
+    upgrades: [],
+    speed: 7,
+  },
+  [ShipClass.Cruiser]: {
+    name: 'Ironclad',
+    class: ShipClass.Cruiser,
+    hull: 150, maxHull: 150,
+    shields: 80, maxShields: 80,
+    energy: 100, maxEnergy: 100,
+    fuel: 100, maxFuel: 100,
+    cargoCapacity: 35,
+    weapons: [STARTER_WEAPONS.railgun, STARTER_WEAPONS.plasma_cannon],
+    upgrades: [],
+    speed: 4,
+  },
+  [ShipClass.Dreadnought]: {
+    name: 'Leviathan',
+    class: ShipClass.Dreadnought,
+    hull: 250, maxHull: 250,
+    shields: 120, maxShields: 120,
+    energy: 150, maxEnergy: 150,
+    fuel: 80, maxFuel: 80,
+    cargoCapacity: 60,
+    weapons: [STARTER_WEAPONS.plasma_cannon, STARTER_WEAPONS.torpedo_launcher, STARTER_WEAPONS.railgun],
+    upgrades: [],
+    speed: 2,
+  },
+};
+
+export const SHIP_UPGRADES: ShipUpgrade[] = [
+  // Weapons
+  { id: 'wpn_railgun', name: 'Railgun', description: 'Electromagnetic accelerator cannon', slot: 'weapon', cost: 2000, effect: { stat: 'weapon_damage', value: 25 }, requiredTech: 3 },
+  { id: 'wpn_plasma', name: 'Plasma Cannon', description: 'Superheated plasma projector', slot: 'weapon', cost: 5000, effect: { stat: 'weapon_damage', value: 40 }, requiredTech: 5 },
+  { id: 'wpn_torpedo', name: 'Torpedo Launcher', description: 'Heavy warhead delivery system', slot: 'weapon', cost: 8000, effect: { stat: 'weapon_damage', value: 50 }, requiredTech: 7 },
+  // Shields
+  { id: 'shd_basic', name: 'Reinforced Shields', description: 'Improved shield capacitors', slot: 'shield', cost: 1500, effect: { stat: 'maxShields', value: 30 }, requiredTech: 2 },
+  { id: 'shd_advanced', name: 'Quantum Shields', description: 'Phase-shifting energy barriers', slot: 'shield', cost: 4000, effect: { stat: 'maxShields', value: 60 }, requiredTech: 5 },
+  { id: 'shd_fortress', name: 'Fortress Array', description: 'Military-grade shield matrix', slot: 'shield', cost: 10000, effect: { stat: 'maxShields', value: 100 }, requiredTech: 8 },
+  // Engines
+  { id: 'eng_boost', name: 'Ion Boosters', description: 'Improved sublight engines', slot: 'engine', cost: 1200, effect: { stat: 'speed', value: 2 }, requiredTech: 2 },
+  { id: 'eng_warp', name: 'Warp Coils', description: 'Enhanced FTL capability', slot: 'engine', cost: 3500, effect: { stat: 'speed', value: 4 }, requiredTech: 4 },
+  { id: 'eng_quantum', name: 'Quantum Drive', description: 'Near-instantaneous travel', slot: 'engine', cost: 12000, effect: { stat: 'speed', value: 8 }, requiredTech: 9 },
+  // Cargo
+  { id: 'crg_expand', name: 'Cargo Extension', description: 'Additional storage modules', slot: 'cargo', cost: 800, effect: { stat: 'cargoCapacity', value: 15 }, requiredTech: 1 },
+  { id: 'crg_compress', name: 'Compression Bay', description: 'Matter compression storage', slot: 'cargo', cost: 3000, effect: { stat: 'cargoCapacity', value: 30 }, requiredTech: 4 },
+  // Special
+  { id: 'spc_scanner', name: 'Deep Scanner', description: 'Reveals hidden systems and anomalies', slot: 'special', cost: 2500, effect: { stat: 'scanRange', value: 1 }, requiredTech: 3 },
+  { id: 'spc_cloak', name: 'Cloaking Device', description: 'Temporary stealth capability', slot: 'special', cost: 15000, effect: { stat: 'stealth', value: 1 }, requiredTech: 8 },
+  { id: 'spc_repair', name: 'Auto-Repair Drones', description: 'Nanite-based hull repair', slot: 'special', cost: 6000, effect: { stat: 'autoRepair', value: 5 }, requiredTech: 6 },
+];
