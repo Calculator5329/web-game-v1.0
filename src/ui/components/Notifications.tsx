@@ -16,7 +16,7 @@ export const Notifications = observer(function Notifications() {
   return (
     <div style={{
       position: 'fixed',
-      top: '64px',
+      top: '10px',
       right: '20px',
       zIndex: 200,
       display: 'flex',

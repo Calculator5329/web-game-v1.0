@@ -4,12 +4,10 @@ import { GameScreen } from '../../core/types';
 import { FACTIONS } from '../../data/factions';
 
 const hudStyle: React.CSSProperties = {
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  right: 0,
+  width: '100%',
   height: '54px',
-  background: 'linear-gradient(180deg, rgba(5,10,24,0.95), rgba(5,10,24,0.8))',
+  minHeight: '54px',
+  background: 'linear-gradient(180deg, #070d1f, #0a1128)',
   borderBottom: '1px solid var(--border)',
   display: 'flex',
   alignItems: 'center',
@@ -18,7 +16,7 @@ const hudStyle: React.CSSProperties = {
   zIndex: 100,
   fontFamily: 'var(--font-mono)',
   fontSize: '0.85rem',
-  backdropFilter: 'blur(8px)',
+  flexShrink: 0,
 };
 
 const navBtn: React.CSSProperties = {

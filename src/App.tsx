@@ -47,7 +47,7 @@ function App() {
       <div style={{ width: '100%', height: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-deep)', overflow: 'hidden' }}>
         {showHUD && <HUD />}
         <Notifications />
-        <div style={{ flex: 1, marginTop: showHUD ? '54px' : 0, overflow: 'hidden' }}>
+        <div style={{ flex: 1, overflow: 'hidden' }}>
           <ScreenRouter />
         </div>
       </div>
