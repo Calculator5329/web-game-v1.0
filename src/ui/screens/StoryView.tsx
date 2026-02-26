@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores/RootStore';
 import { GameScreen } from '../../core/types';
+import { runInAction } from 'mobx';
 import { HoloPanel } from '../components/HoloPanel';
 import { Button } from '../components/Button';
 
@@ -43,6 +44,12 @@ export const StoryView = observer(function StoryView() {
   const dialogueNode = storyStore.currentDialogueNode;
   const event = storyStore.activeEvent;
   const eventOutcome = store.eventOutcome;
+
+  useEffect(() => {
+    if (!dialogueNode && !event && !eventOutcome && store.screen === GameScreen.Story) {
+      runInAction(() => store.setScreen(GameScreen.Galaxy));
+    }
+  }, [dialogueNode, event, eventOutcome, store]);
 
   // Event outcome display
   if (eventOutcome) {
@@ -147,11 +154,6 @@ export const StoryView = observer(function StoryView() {
         </div>
       </div>
     );
-  }
-
-  // No active dialogue — return to game
-  if (store.screen === GameScreen.Story) {
-    store.setScreen(GameScreen.Galaxy);
   }
 
   return null;
