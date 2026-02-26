@@ -40,7 +40,7 @@ const ScreenRouter = observer(function ScreenRouter() {
   }
 });
 
-function App() {
+const App = observer(function App() {
   const store = gameStore;
   const showHUD = store.screen !== GameScreen.MainMenu && store.screen !== GameScreen.NewGame;
 
@@ -57,6 +57,6 @@ function App() {
       </div>
     </StoreContext.Provider>
   );
-}
+});
 
 export default App;
