@@ -100,7 +100,7 @@ export function initCombat(enemy: EnemyShip): CombatState {
 function resolveAttack(
   weapon: ShipWeapon,
   targetShields: number,
-  targetHull: number,
+  _targetHull: number,
   isHeavy: boolean
 ): { shieldDmg: number; hullDmg: number; hit: boolean } {
   const accuracy = isHeavy ? weapon.accuracy * 0.8 : weapon.accuracy;
@@ -204,7 +204,7 @@ export function executePlayerAction(
   }
 
   // Enemy turn
-  const enemyAction = getEnemyAction(enemy, ship);
+  const enemyAction = getEnemyAction(enemy);
   const enemyWeapon = randomChoice(enemy.weapons);
 
   switch (enemyAction) {
@@ -268,7 +268,7 @@ export function executePlayerAction(
   };
 }
 
-function getEnemyAction(enemy: EnemyShip, playerShip: Ship): 'attack' | 'defend' | 'flee' {
+function getEnemyAction(enemy: EnemyShip): 'attack' | 'defend' | 'flee' {
   const hullPercent = enemy.hull / enemy.maxHull;
 
   switch (enemy.ai) {

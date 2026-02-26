@@ -1,24 +1,26 @@
 // ─── Galaxy Types ─────────────────────────────────────────────
 
-export enum StarType {
-  YellowDwarf = 'yellow_dwarf',
-  RedGiant = 'red_giant',
-  BlueGiant = 'blue_giant',
-  WhiteDwarf = 'white_dwarf',
-  NeutronStar = 'neutron_star',
-  BinaryStar = 'binary_star',
-  Pulsar = 'pulsar',
-}
+export const StarType = {
+  YellowDwarf: 'yellow_dwarf',
+  RedGiant: 'red_giant',
+  BlueGiant: 'blue_giant',
+  WhiteDwarf: 'white_dwarf',
+  NeutronStar: 'neutron_star',
+  BinaryStar: 'binary_star',
+  Pulsar: 'pulsar',
+} as const;
+export type StarType = (typeof StarType)[keyof typeof StarType];
 
-export enum PlanetType {
-  Terrestrial = 'terrestrial',
-  GasGiant = 'gas_giant',
-  IceWorld = 'ice_world',
-  Volcanic = 'volcanic',
-  Ocean = 'ocean',
-  Desert = 'desert',
-  ArtificialHabitat = 'artificial_habitat',
-}
+export const PlanetType = {
+  Terrestrial: 'terrestrial',
+  GasGiant: 'gas_giant',
+  IceWorld: 'ice_world',
+  Volcanic: 'volcanic',
+  Ocean: 'ocean',
+  Desert: 'desert',
+  ArtificialHabitat: 'artificial_habitat',
+} as const;
+export type PlanetType = (typeof PlanetType)[keyof typeof PlanetType];
 
 export interface Coordinates {
   x: number;
@@ -42,9 +44,9 @@ export interface StarSystem {
   planets: Planet[];
   description: string;
   faction: FactionId | null;
-  dangerLevel: number;       // 0-10
-  techLevel: number;         // 1-10
-  connections: string[];     // ids of connected systems
+  dangerLevel: number;
+  techLevel: number;
+  connections: string[];
   discovered: boolean;
   hasTradePost: boolean;
   hasShipyard: boolean;
@@ -53,12 +55,13 @@ export interface StarSystem {
 
 // ─── Economy Types ────────────────────────────────────────────
 
-export enum CommodityCategory {
-  RawMaterials = 'raw_materials',
-  Technology = 'technology',
-  Luxury = 'luxury',
-  Contraband = 'contraband',
-}
+export const CommodityCategory = {
+  RawMaterials: 'raw_materials',
+  Technology: 'technology',
+  Luxury: 'luxury',
+  Contraband: 'contraband',
+} as const;
+export type CommodityCategory = (typeof CommodityCategory)[keyof typeof CommodityCategory];
 
 export interface CommodityDef {
   id: string;
@@ -66,8 +69,8 @@ export interface CommodityDef {
   category: CommodityCategory;
   basePrice: number;
   description: string;
-  volatility: number;        // 0-1, how much price fluctuates
-  legalIn: FactionId[];      // empty = legal everywhere, specific = only those
+  volatility: number;
+  legalIn: FactionId[];
   illegal: boolean;
 }
 
@@ -82,7 +85,7 @@ export interface MarketListing {
 export interface MarketData {
   systemId: string;
   listings: MarketListing[];
-  lastUpdated: number;       // game tick
+  lastUpdated: number;
 }
 
 export interface TradeRecord {
@@ -96,20 +99,21 @@ export interface TradeRecord {
 
 // ─── Combat Types ─────────────────────────────────────────────
 
-export enum CombatAction {
-  Attack = 'attack',
-  HeavyAttack = 'heavy_attack',
-  Defend = 'defend',
-  Repair = 'repair',
-  SpecialAbility = 'special',
-  Flee = 'flee',
-}
+export const CombatAction = {
+  Attack: 'attack',
+  HeavyAttack: 'heavy_attack',
+  Defend: 'defend',
+  Repair: 'repair',
+  SpecialAbility: 'special',
+  Flee: 'flee',
+} as const;
+export type CombatAction = (typeof CombatAction)[keyof typeof CombatAction];
 
 export interface ShipWeapon {
   name: string;
   damage: number;
   energyCost: number;
-  accuracy: number;          // 0-1
+  accuracy: number;
   type: 'kinetic' | 'energy' | 'missile';
 }
 
@@ -123,7 +127,7 @@ export interface EnemyShip {
   energy: number;
   maxEnergy: number;
   weapons: ShipWeapon[];
-  credits: number;           // loot
+  credits: number;
   xp: number;
   faction: FactionId | null;
   ai: 'aggressive' | 'defensive' | 'balanced' | 'cowardly';
@@ -149,13 +153,14 @@ export interface CombatState {
 
 // ─── Story Types ──────────────────────────────────────────────
 
-export enum QuestStatus {
-  Locked = 'locked',
-  Available = 'available',
-  Active = 'active',
-  Completed = 'completed',
-  Failed = 'failed',
-}
+export const QuestStatus = {
+  Locked: 'locked',
+  Available: 'available',
+  Active: 'active',
+  Completed: 'completed',
+  Failed: 'failed',
+} as const;
+export type QuestStatus = (typeof QuestStatus)[keyof typeof QuestStatus];
 
 export interface DialogueOption {
   id: string;
@@ -167,7 +172,7 @@ export interface DialogueOption {
     stat?: { key: string; min: number };
   };
   consequences?: StoryConsequence[];
-  nextNodeId: string | null;  // null = end dialogue
+  nextNodeId: string | null;
 }
 
 export interface DialogueNode {
@@ -210,7 +215,7 @@ export interface Chapter {
   title: string;
   description: string;
   introDialogue: DialogueNode[];
-  quests: string[];          // quest ids
+  quests: string[];
   unlockCondition?: {
     chapter?: number;
     flag?: string;
@@ -238,14 +243,15 @@ export interface GameEvent {
 
 // ─── Player Types ─────────────────────────────────────────────
 
-export enum ShipClass {
-  Scout = 'scout',
-  Trader = 'trader',
-  Fighter = 'fighter',
-  Explorer = 'explorer',
-  Cruiser = 'cruiser',
-  Dreadnought = 'dreadnought',
-}
+export const ShipClass = {
+  Scout: 'scout',
+  Trader: 'trader',
+  Fighter: 'fighter',
+  Explorer: 'explorer',
+  Cruiser: 'cruiser',
+  Dreadnought: 'dreadnought',
+} as const;
+export type ShipClass = (typeof ShipClass)[keyof typeof ShipClass];
 
 export interface ShipUpgrade {
   id: string;
@@ -270,8 +276,8 @@ export interface Ship {
   maxFuel: number;
   cargoCapacity: number;
   weapons: ShipWeapon[];
-  upgrades: string[];        // upgrade ids
-  speed: number;             // affects travel time
+  upgrades: string[];
+  speed: number;
 }
 
 export interface CargoItem {
@@ -286,9 +292,9 @@ export interface Player {
   level: number;
   ship: Ship;
   cargo: CargoItem[];
-  currentSystem: string;     // system id
+  currentSystem: string;
   visitedSystems: string[];
-  reputation: Record<FactionId, number>; // -100 to 100
+  reputation: Record<FactionId, number>;
   flags: Record<string, boolean | string | number>;
   stats: PlayerStats;
   tradeHistory: TradeRecord[];
@@ -307,13 +313,14 @@ export interface PlayerStats {
 
 // ─── Faction Types ────────────────────────────────────────────
 
-export enum FactionId {
-  Foundation = 'foundation',
-  Hegemony = 'hegemony',
-  FreeTraders = 'free_traders',
-  Synthetics = 'synthetics',
-  VoidRunners = 'void_runners',
-}
+export const FactionId = {
+  Foundation: 'foundation',
+  Hegemony: 'hegemony',
+  FreeTraders: 'free_traders',
+  Synthetics: 'synthetics',
+  VoidRunners: 'void_runners',
+} as const;
+export type FactionId = (typeof FactionId)[keyof typeof FactionId];
 
 export interface Faction {
   id: FactionId;
@@ -330,17 +337,18 @@ export type ReputationTier = 'hostile' | 'unfriendly' | 'neutral' | 'friendly' |
 
 // ─── Game Types ───────────────────────────────────────────────
 
-export enum GameScreen {
-  MainMenu = 'main_menu',
-  Galaxy = 'galaxy',
-  System = 'system',
-  Trade = 'trade',
-  Combat = 'combat',
-  Story = 'story',
-  Ship = 'ship',
-  Codex = 'codex',
-  NewGame = 'new_game',
-}
+export const GameScreen = {
+  MainMenu: 'main_menu',
+  Galaxy: 'galaxy',
+  System: 'system',
+  Trade: 'trade',
+  Combat: 'combat',
+  Story: 'story',
+  Ship: 'ship',
+  Codex: 'codex',
+  NewGame: 'new_game',
+} as const;
+export type GameScreen = (typeof GameScreen)[keyof typeof GameScreen];
 
 export interface Notification {
   id: string;

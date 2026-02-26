@@ -1,35 +1,58 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { observer } from 'mobx-react-lite';
+import { StoreContext, gameStore } from './stores/RootStore';
+import { GameScreen } from './core/types';
+import { HUD } from './ui/components/HUD';
+import { Notifications } from './ui/components/Notifications';
+import { MainMenu } from './ui/screens/MainMenu';
+import { GalaxyView } from './ui/screens/GalaxyView';
+import { SystemView } from './ui/screens/SystemView';
+import { TradeView } from './ui/screens/TradeView';
+import { CombatView } from './ui/screens/CombatView';
+import { StoryView } from './ui/screens/StoryView';
+import { ShipView } from './ui/screens/ShipView';
+import { CodexView } from './ui/screens/CodexView';
+
+const ScreenRouter = observer(function ScreenRouter() {
+  const store = gameStore;
+
+  switch (store.screen) {
+    case GameScreen.MainMenu:
+    case GameScreen.NewGame:
+      return <MainMenu />;
+    case GameScreen.Galaxy:
+      return <GalaxyView />;
+    case GameScreen.System:
+      return <SystemView />;
+    case GameScreen.Trade:
+      return <TradeView />;
+    case GameScreen.Combat:
+      return <CombatView />;
+    case GameScreen.Story:
+      return <StoryView />;
+    case GameScreen.Ship:
+      return <ShipView />;
+    case GameScreen.Codex:
+      return <CodexView />;
+    default:
+      return <MainMenu />;
+  }
+});
 
 function App() {
-  const [count, setCount] = useState(0)
+  const store = gameStore;
+  const showHUD = store.screen !== GameScreen.MainMenu && store.screen !== GameScreen.NewGame;
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <StoreContext.Provider value={store}>
+      <div style={{ width: '100%', height: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-deep)', overflow: 'hidden' }}>
+        {showHUD && <HUD />}
+        <Notifications />
+        <div style={{ flex: 1, marginTop: showHUD ? '54px' : 0, overflow: 'hidden' }}>
+          <ScreenRouter />
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </StoreContext.Provider>
+  );
 }
 
-export default App
+export default App;

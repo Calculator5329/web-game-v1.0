@@ -1,4 +1,4 @@
-import { type StarSystem, StarType, PlanetType, FactionId } from '../core/types';
+import { type StarSystem, type Coordinates, StarType, PlanetType, FactionId } from '../core/types';
 
 export const STAR_SYSTEMS: StarSystem[] = [
   // ─── Core Systems (Hegemony) ─────────────────────────────
