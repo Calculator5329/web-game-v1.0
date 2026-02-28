@@ -1,73 +1,46 @@
-# React + TypeScript + Vite
+# Web Game v1.0
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A browser-based space exploration and trading game with galaxy navigation and turn-based combat.
 
-Currently, two official plugins are available:
+## What It Is
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+A React/TypeScript web game featuring galaxy exploration, star system navigation, planetary trading, real-time combat mechanics, and story progression. Players can explore a dynamically generated galaxy, manage a spaceship, trade goods, engage in tactical combat, and uncover lore through coded story events and a codex system.
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+- **React 19** - UI framework
+- **TypeScript** - Type safety
+- **MobX** - State management
+- **Vite** - Build tool and dev server
+- **CSS3** - Styling with CSS variables for theming
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Galaxy Exploration** - Navigate a procedurally generated galaxy with multiple star systems
+- **Star System Navigation** - Explore planets, space stations, and unique celestial objects
+- **Trading System** - Buy and sell goods at different planets to build wealth
+- **Combat System** - Turn-based tactical battles with various enemy types
+- **Ship Management** - Customize and upgrade your vessel
+- **Story Events** - Dynamic narrative progression through coded events
+- **Codex** - Comprehensive knowledge base for lore and game mechanics
+- **Visual Effects** - Space backgrounds, warp effects, and animations
+- **Notifications System** - In-game alerts for important events
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Getting Started
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The dev server will start at `http://localhost:5173`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+To build for production:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run build
 ```
+
+---
+
+Created by [Calculator5329](https://github.com/Calculator5329)
